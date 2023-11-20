@@ -1,0 +1,42 @@
+{
+  "chain": "near",
+  "language": "typescript",
+  "slug": "introduction-to-nearjs",
+  "name": "Introduction to NEAR blockchain",
+  "description": "Get hands-on experience with NEAR blockchain and learn how to build a simple application using NEAR SDK for JavaScript.",
+  "type": "course",
+  "plugin": "@agorapp-dao/editor-plugin-nearjs",
+  "config": {
+    "tests": true
+  },
+  "lessons": [
+    {
+      "name": "Your first contract",
+      "slug": "01-introduction",
+      "content": "01-introduction/lesson.md",
+      "files": ["01-introduction/contract.ts"],
+      "solution": "01-introduction/solution.md"
+    },
+    {
+      "name": "State",
+      "slug": "02-state",
+      "content": "02-state/lesson.md",
+      "files": ["02-state/contract.ts"],
+      "solution": "02-state/solution.md"
+    },
+    {
+      "name": "Collections",
+      "slug": "03-collections",
+      "content": "03-collections/lesson.md",
+      "files": ["03-collections/contract.ts"],
+      "solution": "03-collections/solution.md"
+    },
+    {
+      "name": "Environment",
+      "slug": "04-environment",
+      "content": "04-environment/lesson.md",
+      "files": ["04-environment/contract.ts"],
+      "solution": "04-environment/solution.md"
+    }
+  ]
+}

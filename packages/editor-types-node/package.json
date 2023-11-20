@@ -1,0 +1,20 @@
+{
+  "name": "@agorapp-dao/editor-types-node",
+  "version": "1.0.1",
+  "description": "",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "prepare": "node ./scripts/extract-types.mjs",
+    "clean": "rm -rf node_modules && rm -rf dist",
+    "ci-check": "exit 0",
+    "test": "exit 0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.5.9"
+  }
+}

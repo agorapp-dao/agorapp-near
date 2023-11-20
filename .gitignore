@@ -1,0 +1,14 @@
+dist
+node_modules
+.idea/
+.DS_Store
+
+#misc
+*.txt
+
+# dependencies
+node_modules
+.idea/
+yarn*
+
+.next/
