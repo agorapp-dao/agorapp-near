@@ -5,6 +5,7 @@ export enum ECourseChain {
   TON = 'ton',
   LISK = 'lisk',
   NEAR = 'near',
+  SOLANA = 'solana',
 }
 
 export function parseCourseChain(str: string): ECourseChain {

@@ -8,7 +8,6 @@ import {
   parseCourseChain,
   parseCourseLanguage,
 } from '@agorapp-dao/content-common';
-import { parseTopic } from '@agorapp-dao/content-common/src/types/ETopic';
 import { EColorMode } from '@agorapp-dao/react-common/src/types/misc';
 import { contentService } from '@agorapp-dao/content-common/src/services/contentService';
 
@@ -28,7 +27,6 @@ editorService.pluginLoader = async (pluginName: string) => {
     case '@agorapp-dao/editor-plugin-nearjs':
       pluginModule = await import('@agorapp-dao/editor-plugin-nearjs');
       break;
-
     default:
       throw new Error(`Plugin ${pluginName} not found`);
   }
@@ -50,7 +48,7 @@ export default function EditorPage({
           language={language}
           courseSlug={courseSlug}
           activeLessonSlug={lessonSlug}
-          colorMode={EColorMode.light}
+          colorMode={EColorMode.dark}
         />
       </S.Main>
     </SWRConfig>

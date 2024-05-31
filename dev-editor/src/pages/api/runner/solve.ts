@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { TTestResponse } from '@agorapp-dao/editor-common/src/types/TTestResponse';
 import { TTestRequest } from '@agorapp-dao/editor-common/src/types/TTestRequest';
+import { getRunnerUrl } from '@/src/utils/getRunnerUrl';
 
 type ResponseError = {
   error: string;
@@ -31,25 +32,7 @@ async function post(req: NextApiRequest, res: NextApiResponse<TTestResponse>) {
   if (!body.lessonSlug) throw new Error('lessonSlug is required');
   if (!body.files) throw new Error('files are required');
 
-  const runnersHostname = process.env.RUNNERS_HOSTNAME || `localhost`;
-
-  let baseUrl = '';
-  switch (body.runner) {
-    case 'docker-runner':
-      baseUrl = `http://${runnersHostname}:7009`;
-      break;
-    case 'func':
-      baseUrl = `http://${runnersHostname}:7080`;
-      break;
-    case 'motoko':
-      baseUrl = `http://${runnersHostname}:7002`;
-      break;
-    case 'solidity':
-      baseUrl = `http://${runnersHostname}:7000`;
-      break;
-    default:
-      throw new Error(`Runner ${body.runner} not supported`);
-  }
+  let baseUrl = getRunnerUrl(body.runner);
 
   const response = await fetch(`${baseUrl}/v1/solve`, {
     method: 'POST',

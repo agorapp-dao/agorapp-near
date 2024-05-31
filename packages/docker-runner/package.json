@@ -7,7 +7,7 @@
     "start": "node -r ts-node/register src/main.ts",
     "clean": "rm -rf node_modules",
     "dev": "node --watch -r ts-node/register src/main.ts",
-    "test": "npm run build-test-docker-runner && tsc --noEmit && mocha -r ts-node/register --timeout 10000 src/**/*.test.ts",
+    "test": "npm run build-test-docker-runner && tsc --noEmit && mocha -r ts-node/register --timeout 10000 'src/**/*.test.ts'",
     "docker-build": "docker build ../.. -f Dockerfile -t docker-runner:latest",
     "docker-run": "docker run -it -p 7009:7009 -v /var/run/docker.sock:/var/run/docker.sock docker-runner:latest",
     "build-test-docker-runner": "docker build -f test/test-docker-runner/Dockerfile -t  test-docker-runner:local test/test-docker-runner",

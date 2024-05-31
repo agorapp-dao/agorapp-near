@@ -5,47 +5,76 @@ import { useEditorStore } from '../EditorStore';
 import { SectionOutput } from '../Section/SectionOutput/SectionOutput';
 import { courseService } from '../../services/courseService';
 import { SectionTests } from '../Section/SectionTests/SectionTests';
+import { useEditorPlugin } from '../Monaco/useEditorPlugin';
+import { TEditorPanel } from '../../types/TEditorPanel';
+
+export const TEST_PANEL_ID = 'test';
+export const OUTPUT_PANEL_ID = 'output';
 
 export const BottomPanel = () => {
-  const [activeTab, setActiveTab] = useState(0);
-  const [tabs, setTabs] = useState<string[]>([]);
+  const [panels, setPanels] = useState<TEditorPanel<unknown>[]>([]);
   const store = useEditorStore();
   const course = courseService.useCourse();
+  const plugin = useEditorPlugin();
 
   useEffect(() => {
-    if (!course.data) {
+    if (!course.data || !plugin) {
       return;
     }
 
-    const newTabs = [];
+    const newPanels: TEditorPanel<unknown>[] = [];
     if (course.data.config.output) {
-      newTabs.push('Output');
+      newPanels.push({
+        id: OUTPUT_PANEL_ID,
+        label: 'Output',
+        component: SectionOutput,
+        props: {},
+      });
     }
     if (course.data.config.tests) {
-      newTabs.push('Tests');
+      newPanels.push({
+        id: TEST_PANEL_ID,
+        label: 'Tests',
+        component: SectionTests,
+        props: {},
+      });
     }
-    setTabs(newTabs);
-  }, [course.data]);
+    for (const panel of store.panels) {
+      newPanels.push(panel);
+    }
+    setPanels(newPanels);
 
-  const changeActiveTab = (event: React.SyntheticEvent, newValue: number) => {
-    setActiveTab(newValue);
+    if (!store.activePanel && newPanels.length > 0) {
+      store.actions.setActivePanel(newPanels[0].id);
+    }
+  }, [course.data, plugin, store]);
+
+  const changeActiveTab = (event: React.SyntheticEvent, panelId: string) => {
+    store.actions.setActivePanel(panelId);
   };
 
+  const activePanel = panels.find(p => p.id === store.activePanel) ?? panels[0];
+
   return (
-    // <Pane style={{ display: 'flex', height: '100%' }}>
-    <Box sx={{ width: '100%', flex: '1 1 auto', display: 'flex', flexDirection: 'column' }}>
+    <Box
+      sx={{
+        width: '100%',
+        flex: '1 1 auto',
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+      }}
+    >
       <Box sx={{ borderBottom: 1, borderColor: theme => theme.custom.splitPaneLine }}>
-        <Tabs value={activeTab} onChange={changeActiveTab}>
-          {tabs.map((tab, index) => (
-            <Tab label={tab} key={index} value={index} />
+        <Tabs value={store.activePanel} onChange={changeActiveTab}>
+          {panels.map(panel => (
+            <Tab label={panel.label} key={panel.id} value={panel.id} />
           ))}
         </Tabs>
       </Box>
       <S.Content>
-        {course.data?.config.output && <SectionOutput output={store.output} />}
-        {course.data?.config.tests && <SectionTests testResults={store.testResults} />}
+        {activePanel && <activePanel.component {...(activePanel.props as {})} />}
       </S.Content>
     </Box>
-    // </Pane>
   );
 };

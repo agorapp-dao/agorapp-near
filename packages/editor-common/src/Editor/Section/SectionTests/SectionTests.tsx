@@ -1,15 +1,14 @@
-import { TTestResponse } from '../../../types/TTestResponse';
-import { Box, Grid, Tooltip, Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import React from 'react';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import * as S from './SectionTests.styled';
+import { useEditorStore } from '../../EditorStore';
 
-type TProps = {
-  testResults: TTestResponse | undefined;
-};
+export function SectionTests() {
+  const store = useEditorStore();
+  const testResults = store.testResults;
 
-export const SectionTests: React.FC<TProps> = ({ testResults }: TProps) => {
   if (!Object.entries(testResults || {}).length) {
     return (
       <Grid container>
@@ -69,4 +68,4 @@ export const SectionTests: React.FC<TProps> = ({ testResults }: TProps) => {
       </Grid>
     </S.Wrapper>
   );
-};
+}

@@ -10,8 +10,8 @@ import mockRequire from 'mock-require';
  * Note that imports are cached by the Node.js runtime, so if code on the disk changes, you might
  * have to call the `invalidateRequireCache` method.
  *
- * TODO: Built on top of CommonJS, won't work with ES modules. Currently workaround is to use TypeScript and compile
- * to CommonJS.
+ * TODO: Built on top of CommonJS, won't work with ES modules.
+ * To use ES modules, move to testdouble npm package
  */
 export class JavaScriptUserspace {
   static async create(files?: TEditorFileMap) {

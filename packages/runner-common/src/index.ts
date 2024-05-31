@@ -5,6 +5,7 @@ export { errors } from './errors/errors';
 export { ErrorFactory } from './errors/ErrorFactory';
 export { fallbackErrorHandler } from './errors/fallbackErrorHandler';
 export * from './services/JavaScriptUserspace';
+export * from './services/TestLiteService';
 export * from './utils/sleep';
 export * from './course-runner/CourseRunner';
 export * from './course-runner/CourseChecker';

@@ -1,0 +1,9 @@
+**/node_modules
+**/dist
+**/contracts/userland
+
+**/userspace
+.git/
+.husky/
+.github/
+.idea/

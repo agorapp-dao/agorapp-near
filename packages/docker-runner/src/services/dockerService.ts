@@ -22,14 +22,15 @@ class DockerService {
    * container completes, it returns the result and any output from the container.
    *
    * @param image   Name of the image to run.
+   * @param action  Action to run in the container, will be passed to the container as an environment variable.
    * @param args    JSON with arguments, will be passed to the container as an environment variable.
    */
-  async run(image: string, args: unknown): Promise<RunResult> {
+  async run(image: string, action: 'test' | 'action', args: unknown): Promise<RunResult> {
     if (!allowedImages[image]) {
       throw new Error(`Image ${image} is not allowed`);
     }
 
-    return await this.runUnrestricted(image, args, {
+    return await this.runUnrestricted(image, action, args, {
       timeout: allowedImages[image].timeout,
       memory: allowedImages[image].memory,
     });
@@ -40,10 +41,16 @@ class DockerService {
    * image name and limit the memory and timeout.
    *
    * @param image
+   * @param action
    * @param args
    * @param opts
    */
-  async runUnrestricted(image: string, args: unknown, opts?: RunOpts): Promise<RunResult> {
+  async runUnrestricted(
+    image: string,
+    action: 'test' | 'action',
+    args: unknown,
+    opts?: RunOpts,
+  ): Promise<RunResult> {
     opts = opts || {};
     opts.timeout = opts.timeout || 2_000;
     opts.memory = opts.memory || 24 * Math.pow(1024, 2);
@@ -60,7 +67,7 @@ class DockerService {
         // If --memory-swap is set to the same value as --memory, and --memory is set to a positive integer, the container does not have access to swap.
         MemorySwappiness: opts.memory,
       },
-      Env: [`DOCKER_RUNNER_ARGS=${JSON.stringify(args)}`],
+      Env: [`DOCKER_RUNNER_ACTION=${action}`, `DOCKER_RUNNER_ARGS=${JSON.stringify(args)}`],
       NetworkDisabled: true,
       AttachStdin: false,
       Tty: true,

@@ -1,0 +1,71 @@
+{
+  "chain": "near",
+  "language": "typescript",
+  "slug": "steal-the-tips",
+  "name": "Steal the Tips",
+  "description": "Uncover and exploit security flaws in a social network's smart contract to steal tips from users.",
+  "type": "challenge",
+  "plugin": "@agorapp-dao/editor-plugin-nearjs",
+  "config": {
+    "tests": true
+  },
+  "lessons": [
+    {
+      "name": "Challenge",
+      "slug": "challenge",
+      "content": "challenge/lesson.md",
+      "files": ["challenge/nft-giveaway.ts", "challenge/tip-stream.ts"],
+      "solution": "challenge/solution.md",
+      "pluginConfig": {
+        "initialBalances": [
+          { "accountId": "alice.near", "balance": "1000000000" },
+          { "accountId": "attacker.near", "balance": "0" },
+          { "accountId": "tip-stream.near", "balance": "800000000000" },
+          { "accountId": "nft-giveaway.near", "balance": "0" }
+        ],
+        "availableTransactions": [
+          { "contract": "nft-giveaway.near", "method": "claim_free_nft", "signer": "", "args": [] },
+          {
+            "contract": "tip-stream.near",
+            "method": "near_deposit",
+            "signer": "",
+            "args": [],
+            "payable": true
+          },
+          {
+            "contract": "tip-stream.near",
+            "method": "near_withdraw",
+            "signer": "",
+            "args": [{ "name": "amount", "type": "bigint" }]
+          },
+          {
+            "contract": "tip-stream.near",
+            "method": "tip",
+            "signer": "",
+            "args": [
+              { "name": "receiverAccountId", "type": "string" },
+              { "name": "amount", "type": "bigint" }
+            ]
+          }
+        ],
+        "defaultTransactions": [
+          {
+            "contract": "tip-stream.near",
+            "method": "near_deposit",
+            "signer": "alice.near",
+            "args": [],
+            "payable": true,
+            "amount": "1000000000"
+          },
+          {
+            "contract": "nft-giveaway.near",
+            "method": "claim_free_nft",
+            "signer": "alice.near",
+            "args": []
+          }
+        ],
+        "signers": ["alice.near", "attacker.near"]
+      }
+    }
+  ]
+}

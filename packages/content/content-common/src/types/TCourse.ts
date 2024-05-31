@@ -19,7 +19,7 @@ export type TCourse<T = unknown> = {
   lessons: TLesson[];
 };
 
-export type TLesson = {
+export type TLesson<T = unknown> = {
   name: string;
   slug?: string; // slug is optional for challenges, where there is only 1 lesson
 
@@ -39,10 +39,14 @@ export type TLesson = {
    * Computed property. Frontend will calculate this.
    */
   $lessonNumber?: string;
+
+  pluginConfig?: T;
 };
 
 export type TCourseConfig = {
   output?: boolean;
   tests?: boolean;
   enableLessonsWithProgress?: boolean;
+
+  actions?: string[];
 };

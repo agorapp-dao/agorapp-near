@@ -1,7 +1,7 @@
-import { Course, CourseBase, Lesson, LessonBase, Test } from './course';
+import { Action, Course, CourseBase, Lesson, LessonBase, Test } from './course';
 import { CourseRunner } from './CourseRunner';
 import { expect } from 'chai';
-import { TTestResponse } from '../types';
+import { TActionRequest, TActionResponse, TTestResponse } from '../types';
 import sinon from 'sinon';
 
 describe('course-runner', () => {
@@ -244,5 +244,85 @@ describe('course-runner', () => {
     const res = await runner.test('sample-course', '01-test-lesson', []);
     expect(afterEachFake.callCount).to.equal(2, 'afterEachFake should have been called twice');
     expect(afterAllFake.callCount).to.equal(1, 'afterAllFake should have been called once');
+  });
+
+  it('actions', async () => {
+    const courseActionFake = sinon.fake();
+    const lessonActionFake = sinon.fake();
+
+    type TSampleActionReq = { in: string };
+    type TSampleActionRes = { out: string };
+
+    @Course('sample-course')
+    class SampleCourse extends CourseBase {
+      lessons = [SampleLesson];
+
+      @Action('courseAction')
+      async courseAction(req: TActionRequest<TSampleActionReq>): Promise<TSampleActionRes> {
+        courseActionFake();
+        return { out: req.args.in };
+      }
+    }
+    @Lesson('01-test-lesson')
+    class SampleLesson extends LessonBase {
+      @Action('lessonAction')
+      async lessonAction(req: TActionRequest<TSampleActionReq>): Promise<TSampleActionRes> {
+        lessonActionFake();
+        return { out: req.args.in };
+      }
+
+      @Action('errorAction')
+      async errorAction(req: TActionRequest<TSampleActionReq>): Promise<TSampleActionRes> {
+        throw new Error('Test error');
+      }
+    }
+
+    const runner = new CourseRunner([SampleCourse]);
+    let req: TActionRequest<TSampleActionReq> = {
+      runner: 'test',
+      courseSlug: 'sample-course',
+      // note that for course action, lesson slug can be anything
+      lessonSlug: 'xxx',
+      action: 'courseAction',
+      files: [],
+      args: {
+        in: 'test',
+      },
+    };
+
+    let res = await runner.action<TSampleActionRes>(req);
+    expect(res.body).to.deep.equal({ out: 'test' });
+    expect(res.error).to.be.undefined;
+    expect(courseActionFake.callCount).to.equal(1);
+
+    req = {
+      runner: 'test',
+      courseSlug: 'sample-course',
+      lessonSlug: '01-test-lesson',
+      action: 'lessonAction',
+      files: [],
+      args: {
+        in: 'test',
+      },
+    };
+
+    res = await runner.action(req);
+    expect(res.body).to.deep.equal({ out: 'test' });
+    expect(res.error).to.be.undefined;
+    expect(lessonActionFake.callCount).to.equal(1);
+
+    req = {
+      runner: 'test',
+      courseSlug: 'sample-course',
+      lessonSlug: '01-test-lesson',
+      action: 'errorAction',
+      files: [],
+      args: {
+        in: 'test',
+      },
+    };
+    res = await runner.action(req);
+    expect(res.body).to.be.undefined;
+    expect(res.error).to.equal('Test error');
   });
 });

@@ -14,6 +14,7 @@ import { useEditorPlugin } from '../Monaco/useEditorPlugin';
 import { AgButton } from '@agorapp-dao/react-common/src/components/AgButton';
 import { EAnalyticsActions, EAnalyticsCategories, UserAnalytics } from '@agorapp-dao/react-common';
 import { useMobile } from '../../hooks/useMobile';
+import { OUTPUT_PANEL_ID, TEST_PANEL_ID } from '../BottomPanel/BottomPanel';
 
 interface IControlPanelProps {
   handleResetCode: () => void;
@@ -23,13 +24,15 @@ export const ControlPanel = ({ handleResetCode }: IControlPanelProps) => {
   const router = useRouter();
   const plugin = useEditorPlugin();
   const store = useEditorStore();
-  const actions = useEditorActions();
+  const editorActions = useEditorActions();
   const [running, setRunning] = useState(false);
   const [nextLesson, setNextLesson] = useState<TLesson | undefined>(undefined);
   const [prevLesson, setPrevLesson] = useState<TLesson | undefined>(undefined);
   const course = courseService.useCourse();
   const { progress, invalidateProgress } = courseService.useCourseProgress();
   const { mobile } = useMobile();
+
+  const actions = course.data?.config?.actions || ['run'];
 
   useEffect(() => {
     if (course.data && store.activeLessonSlug) {
@@ -68,14 +71,15 @@ export const ControlPanel = ({ handleResetCode }: IControlPanelProps) => {
           store.activeLessonSlug,
           store.files,
         );
-        actions.setTestResults(res);
+        editorActions.setTestResults(res);
         if (res.passed && store.config.onLessonComplete) {
           const activeLesson = courseService.findLessonBySlug(course.data, store.activeLessonSlug);
-          await store.config.onLessonComplete(
-            activeLesson?.$lessonNumber,
-            !!prevLesson,
-            !!nextLesson,
-          );
+          await store.config.onLessonComplete({
+            lessonNumber: activeLesson?.$lessonNumber,
+            isPrevLesson: !!prevLesson,
+            isNextLesson: !!nextLesson,
+            gas: res.gas,
+          });
         }
         invalidateProgress();
       } else {
@@ -85,10 +89,16 @@ export const ControlPanel = ({ handleResetCode }: IControlPanelProps) => {
           store.activeLessonSlug,
           store.files,
         );
-        actions.setOutput(output);
+        editorActions.setOutput(output);
       }
     } finally {
       setRunning(false);
+    }
+
+    if (course.data.config.tests) {
+      store.actions.setActivePanel(TEST_PANEL_ID);
+    } else if (course.data.config.output) {
+      store.actions.setActivePanel(OUTPUT_PANEL_ID);
     }
   };
 
@@ -114,6 +124,26 @@ export const ControlPanel = ({ handleResetCode }: IControlPanelProps) => {
     }
   };
 
+  const getActionComponent = (action: string) => {
+    const actions = plugin?.actions;
+    if (!actions) {
+      return;
+    }
+    const ActionComponent = actions[action];
+    return <ActionComponent />;
+  };
+
+  console.debug(
+    'nextLesson',
+    nextLesson,
+    'running',
+    running,
+    'status',
+    progress[store.activeLessonSlug]?.status,
+    'enableLessonsWithProgress',
+    store.config.enableLessonsWithProgress,
+  );
+
   const nextDisabled =
     !nextLesson ||
     running ||
@@ -121,16 +151,31 @@ export const ControlPanel = ({ handleResetCode }: IControlPanelProps) => {
       progress[store.activeLessonSlug]?.status !== 'FINISHED' &&
       store.config.enableLessonsWithProgress);
 
+  const runLabel = plugin?.labels?.runButton || 'RUN';
+
   return (
     <S.Wrapper>
-      <AgButton
-        onClick={handleRunCode}
-        startIcon={
-          running ? <CircularProgress color="secondary" size={14} /> : <PlayArrowRoundedIcon />
-        }
-      >
-        RUN
-      </AgButton>
+      {actions.map(action => (
+        <div key={action}>
+          {action === 'run' ? (
+            <AgButton
+              onClick={handleRunCode}
+              startIcon={
+                running ? (
+                  <CircularProgress color="secondary" size={14} />
+                ) : (
+                  <PlayArrowRoundedIcon />
+                )
+              }
+            >
+              {runLabel}
+            </AgButton>
+          ) : (
+            getActionComponent(action)
+          )}
+        </div>
+      ))}
+
       <IconButton aria-label="reset" onClick={handleResetCode}>
         <DeleteOutlineRoundedIcon />
       </IconButton>

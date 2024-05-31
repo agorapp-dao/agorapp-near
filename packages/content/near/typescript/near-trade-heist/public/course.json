@@ -1,0 +1,48 @@
+{
+  "chain": "near",
+  "language": "typescript",
+  "slug": "near-trade-heist",
+  "name": "NEARTrade Heist",
+  "description": "Find and exploit a vulnerability in NEARTrade's smart contract, a NEAR-based trading platform, to steal funds.",
+  "type": "challenge",
+  "plugin": "@agorapp-dao/editor-plugin-nearjs",
+  "config": {
+    "tests": true
+  },
+  "lessons": [
+    {
+      "name": "Challenge",
+      "slug": "challenge",
+      "content": "challenge/lesson.md",
+      "files": ["challenge/attack.ts", "challenge/near-trade.ts"],
+      "solution": "challenge/solution.md",
+      "pluginConfig": {
+        "initialBalances": [
+          { "accountId": "attack.near", "balance": "5000000" },
+          { "accountId": "near-trade.near", "balance": "1000000000000" },
+          { "accountId": "staking-pool.near", "balance": "1200000000000" }
+        ],
+        "availableTransactions": [
+          { "contract": "attack.near", "method": "attack", "signer": "attack.near", "args": [] },
+          {
+            "contract": "near-trade.near",
+            "method": "near_deposit",
+            "signer": "attack.near",
+            "args": [],
+            "payable": true
+          },
+          {
+            "contract": "near-trade.near",
+            "method": "near_withdraw",
+            "signer": "attack.near",
+            "args": [{ "name": "amount", "type": "string" }]
+          }
+        ],
+        "defaultTransactions": [
+          { "contract": "attack.near", "method": "attack", "signer": "attack.near", "args": [] }
+        ],
+        "signers": ["attack.near"]
+      }
+    }
+  ]
+}

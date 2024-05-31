@@ -5,11 +5,11 @@ import { EEditorSectionType } from '../constants';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { TTestResponse } from '../types/TTestResponse';
 import { TEditorConfig } from '../types/TEditorConfig';
-import { ETopic } from '@agorapp-dao/content-common/src/types/ETopic';
 import { EColorMode } from '@agorapp-dao/react-common/src/types/misc';
 import { ECourseChain, ECourseLanguage } from '@agorapp-dao/content-common';
+import { TEditorPanel } from '../types/TEditorPanel';
 
-interface EditorState {
+export interface EditorStore {
   chain: ECourseChain;
   language: ECourseLanguage;
   courseSlug: string;
@@ -32,6 +32,13 @@ interface EditorState {
 
   activeTab: number;
 
+  /**
+   * Custom panels created by plugins.
+   */
+  panels: TEditorPanel<unknown>[];
+  activePanel: string;
+  sidePanels: TEditorPanel<unknown>[];
+
   currentSection: EEditorSectionType;
 
   output: string;
@@ -52,11 +59,15 @@ interface EditorState {
     setFontSize: (size: number) => void;
     setColorMode: (mode: EColorMode) => void;
     setHeaderContent: (headerContent: React.ReactNode) => void;
+    addPanel: (panel: TEditorPanel<any>) => void;
+    updatePanel: (panel: TEditorPanel<any>) => void;
+    setActivePanel: (id: string) => void;
+    addSidePanel: (panel: TEditorPanel<any>) => void;
   };
 }
 
 function createEditorStore(props: EditorStoreProviderProps) {
-  return createStore<EditorState>()(set => ({
+  return createStore<EditorStore>()(set => ({
     chain: props.chain,
     language: props.language,
     courseSlug: props.courseSlug,
@@ -70,6 +81,9 @@ function createEditorStore(props: EditorStoreProviderProps) {
     files: [],
     tabs: [],
     activeTab: 0,
+    panels: [],
+    activePanel: '',
+    sidePanels: [],
     currentSection: EEditorSectionType.LESSON,
 
     output: '',
@@ -115,11 +129,36 @@ function createEditorStore(props: EditorStoreProviderProps) {
       setHeaderContent(headerContent: React.ReactNode) {
         set({ headerContent: headerContent });
       },
+      addPanel(panel: TEditorPanel<unknown>) {
+        set(state => {
+          return { panels: [...state.panels, panel] };
+        });
+      },
+      updatePanel(panel: TEditorPanel<any>) {
+        set(state => {
+          // find the panel and replace it with updated one
+          const index = state.panels.findIndex(p => p.id === panel.id);
+          if (index === -1) {
+            return state;
+          }
+          const panels = [...state.panels];
+          panels[index] = panel;
+          return { panels };
+        });
+      },
+      setActivePanel(id: string) {
+        set({ activePanel: id });
+      },
+      addSidePanel(panel: TEditorPanel<unknown>) {
+        set(state => {
+          return { sidePanels: [...state.sidePanels, panel] };
+        });
+      },
     },
   }));
 }
 
-const EditorStoreContext = createContext<StoreApi<EditorState> | null>(null);
+const EditorStoreContext = createContext<StoreApi<EditorStore> | null>(null);
 
 interface EditorStoreProviderProps {
   chain: ECourseChain;
@@ -154,7 +193,7 @@ export function useEditorStore() {
 }
 
 export function useEditorStoreWithSelector<U>(
-  selector: (state: EditorState) => U,
+  selector: (state: EditorStore) => U,
   equalityFn?: (a: U, b: U) => boolean,
 ) {
   const store = useContext(EditorStoreContext);

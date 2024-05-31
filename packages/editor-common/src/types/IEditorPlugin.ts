@@ -1,6 +1,7 @@
 import { TEditorFile, Monaco } from '../index';
 import { TTestResponse } from './TTestResponse';
 import { TCourse, TCourseType } from '@agorapp-dao/content-common';
+import { EditorStore } from '../Editor/EditorStore';
 
 export interface IEditorPlugin {
   name: string;
@@ -10,7 +11,7 @@ export interface IEditorPlugin {
    */
   fileExtensions: { [ext: string]: string };
 
-  init(monaco: Monaco, course?: TCourse<unknown>): Promise<void>;
+  init(monaco: Monaco, course?: TCourse<unknown>, editorStore?: EditorStore): Promise<void>;
 
   /**
    * Executes the provided files and returns the program output.
@@ -32,4 +33,8 @@ export interface IEditorPlugin {
   onModelChange?(): void;
 
   destroy?(): Promise<void>;
+
+  actions?: { [name: string]: React.ComponentType<{}> };
+
+  labels?: { runButton?: string };
 }

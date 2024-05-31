@@ -9,7 +9,7 @@ solveRouter.post('/', async (req: Request, res: Response, next: NextFunction): P
     const reqBody = req.body as TTestRequest;
     if (!reqBody.image) throw new Error('image is required');
 
-    const { result, error, output } = await dockerService.run(reqBody.image, req.body);
+    const { result, error, output } = await dockerService.run(reqBody.image, 'test', req.body);
 
     if (error) {
       console.error(`Error running docker image ${reqBody.image}`, error, output);

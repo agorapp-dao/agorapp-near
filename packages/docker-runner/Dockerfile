@@ -7,9 +7,10 @@ ENV DOCKER_TAG ${DOCKER_TAG}
 
 WORKDIR /app
 
-RUN npm install -g pnpm
+RUN npm install -g pnpm@8
 
 # Install dependencies
+RUN apt-get update && apt-get install -y curl # for healthcheck
 COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
 COPY packages/docker-runner/package.json packages/docker-runner/
 COPY packages/runner-common/package.json packages/runner-common/

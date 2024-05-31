@@ -2,9 +2,15 @@ Welcome to the Introduction to NEAR JavaScript SDK. In this course, you will lea
 
 ## What is NEAR?
 
-NEAR is a decentralized blockchain project governed by the NEAR Foundation. The goal of the project is to provide a platform that hosts applications in a decentralized way.
+NEAR is a decentralized blockchain project governed by the NEAR Foundation. The goal of the project is to provide a user-friendly platform that hosts applications and smart contracts in a decentralized way.
 
-NEAR's platform is also known as B.O.S., an acronym for Blockchain Operating System. It provides developers with tools for creating decentralized applications (dApps). What's interesting about this platform is that it gives you tools to build both the backend and frontend of your application.
+There are a couple of things that make NEAR stand out:
+
+- Easy to remember account names (e.g., `alice.near`)
+- Fast and cheap transactions
+- Integration with other blockchains
+- Developer-friendly tools
+- Capability to host entire applications on the chain, including the UI
 
 In this course, we will focus on the backend part of the application, typically referred to as a smart contract. Smart contracts are programs that run on the blockchain.
 

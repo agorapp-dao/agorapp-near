@@ -4,27 +4,23 @@
   "license": "ISC",
   "main": "src/index.ts",
   "scripts": {
-    "test": "tsc --noEmit && pnpm run test-mock && pnpm run build-test-contracts && pnpm run test-integration",
-    "test-mock": "mkdir -p tmp && cp ../nearjs-mock-test-contracts/src/* tmp/ && mocha -r ts-node/register test/**/*.test.ts",
-    "test-integration": "TEST_INTEGRATION=true mocha -r ts-node/register --timeout=300000 test/**/*.test.ts",
-    "build-test-contracts": "(cd ../nearjs-mock-test-contracts && pnpm build)",
-    "clean": "rm -rf node_modules && rm -rf tmp"
+    "test": "rm -rf userspace && tsc --noEmit && mocha -r ts-node/register 'src/**/*.test.ts'",
+    "clean": "rm -rf node_modules && rm -rf userspace"
   },
   "dependencies": {
     "@agorapp-dao/runner-common": "workspace:*",
-    "lodash": "^4.17.21"
+    "lodash": "^4.17.21",
+    "near-sdk-js": "github:agorapp-dao/near-sdk-js#v2",
+    "near-workspaces": "^3.5.0"
   },
   "devDependencies": {
     "@types/chai": "^4.3.9",
+    "@types/chai-as-promised": "^7.1.8",
     "@types/lodash": "^4.14.200",
     "@types/mocha": "^10.0.3",
-    "@types/mock-require": "^2.0.1",
     "@types/node": "^18.6.2",
     "chai": "^4.3.6",
-    "mocha": "^10.1.0",
-    "mock-require": "^3.0.3",
-    "near-sdk-js": "1.0.0",
-    "near-workspaces": "^3.2.1",
-    "ts-morph": "^16.0.0"
+    "chai-as-promised": "^7.1.1",
+    "mocha": "^10.1.0"
   }
 }

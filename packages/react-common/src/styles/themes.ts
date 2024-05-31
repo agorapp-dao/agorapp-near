@@ -292,6 +292,7 @@ export const makeTheme = (mode: PaletteMode, brand: EColorBrand): Theme => {
       ...customColors,
       courseColor: '#ED85FB',
       challengeColor: '#FFC600',
+      tutorialColor: '#00edff',
       splitPaneLine: alpha(theme.palette.secondary.light, 0.35),
     },
     mixins: {

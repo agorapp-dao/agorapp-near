@@ -1,9 +1,7 @@
 import React from 'react';
+import { useEditorStore } from '../../EditorStore';
 
-type TProps = {
-  output: string;
-};
-
-export const SectionOutput: React.FC<TProps> = ({ output }: TProps) => {
-  return <pre>{output}</pre>;
-};
+export function SectionOutput() {
+  const store = useEditorStore();
+  return <pre>{store.output}</pre>;
+}

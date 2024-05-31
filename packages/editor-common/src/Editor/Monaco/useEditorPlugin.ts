@@ -5,12 +5,15 @@ import { editorService } from '../editorService';
 import { useMonaco } from './Monaco';
 import { Monaco } from '@monaco-editor/loader';
 import { TCourse } from '@agorapp-dao/content-common';
+import { EditorStore, useEditorStore } from '../EditorStore';
 
 let currentPlugin: { name?: string; promise?: Promise<IEditorPlugin> } = {};
+let currentLessonSlug: string | undefined;
 
 export function useEditorPlugin() {
   const monaco = useMonaco();
   const course = courseService.useCourse();
+  const editorStore = useEditorStore();
 
   const [plugin, setPlugin] = useState<IEditorPlugin | undefined>(undefined);
 
@@ -20,7 +23,8 @@ export function useEditorPlugin() {
         return;
       }
 
-      if (course.data.plugin !== currentPlugin.name) {
+      if (editorStore.activeLessonSlug !== currentLessonSlug) {
+        currentLessonSlug = editorStore.activeLessonSlug;
         if (currentPlugin.name) {
           const prevPlugin = await currentPlugin.promise;
           if (prevPlugin?.destroy) {
@@ -31,21 +35,21 @@ export function useEditorPlugin() {
 
         console.log('Creating plugin instance', course.data.plugin);
         currentPlugin.name = course.data.plugin;
-        currentPlugin.promise = createPlugin(course.data, monaco);
+        currentPlugin.promise = createPlugin(course.data, monaco, editorStore);
       }
 
       const plugin_ = await currentPlugin.promise;
       setPlugin(plugin_);
     })();
-  }, [course.data, monaco]);
+  }, [course.data, monaco, editorStore]);
 
   return plugin;
 }
 
-async function createPlugin(course: TCourse, monaco: Monaco) {
+async function createPlugin(course: TCourse, monaco: Monaco, editorStore: EditorStore) {
   const Plugin = await editorService.pluginLoader(course.plugin);
   const plugin = new Plugin();
-  await plugin.init(monaco, course);
+  await plugin.init(monaco, course, editorStore);
   editorService.registerPlugin(plugin);
   return plugin;
 }

@@ -1,0 +1,56 @@
+{
+  "chain": "near",
+  "language": "typescript",
+  "slug": "async-programming",
+  "name": "Asynchronous Programming on NEAR",
+  "description": "Learn how to write asynchronous code on NEAR blockchain with NearPromise.",
+  "type": "course",
+  "plugin": "@agorapp-dao/editor-plugin-nearjs",
+  "config": {
+    "tests": true
+  },
+  "lessons": [
+    {
+      "name": "Introduction",
+      "slug": "01-introduction",
+      "content": "01-introduction/lesson.md",
+      "files": ["01-introduction/faucet.ts"],
+      "solution": "01-introduction/solution.md"
+    },
+    {
+      "name": "Writing tests",
+      "slug": "02-tests",
+      "content": "02-tests/lesson.md",
+      "files": ["02-tests/faucet.ts", "02-tests/test.ts"],
+      "solution": "02-tests/solution.md"
+    },
+    {
+      "name": "Callbacks",
+      "slug": "03-callbacks",
+      "content": "03-callbacks/lesson.md",
+      "files": ["03-callbacks/faucet.ts", "03-callbacks/test.ts"],
+      "solution": "03-callbacks/solution.md"
+    },
+    {
+      "name": "Chaining promises",
+      "slug": "04-chaining",
+      "content": "04-chaining/lesson.md",
+      "files": ["04-chaining/faucet.ts", "04-chaining/test.ts"],
+      "solution": "04-chaining/solution.md"
+    },
+    {
+      "name": "Orphaned promises",
+      "slug": "05-orphans",
+      "content": "05-orphans/lesson.md",
+      "files": ["05-orphans/faucet.ts", "05-orphans/test.ts"],
+      "solution": "05-orphans/solution.md"
+    },
+    {
+      "name": "Example: fungible token swap",
+      "slug": "06-token-swap",
+      "content": "06-token-swap/lesson.md",
+      "files": ["06-token-swap/swap.ts", "06-token-swap/test.ts"],
+      "solution": "06-token-swap/solution.md"
+    }
+  ]
+}

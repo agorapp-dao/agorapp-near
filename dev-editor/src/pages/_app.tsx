@@ -19,7 +19,7 @@ const MyApp = ({ Component, emotionCache = clientSideEmotionCache, ...rest }: My
   const { pageProps } = rest;
 
   const theme = React.useMemo(
-    () => createTheme(makeTheme(EColorMode.light, EColorBrand.motoko)),
+    () => createTheme(makeTheme(EColorMode.dark, EColorBrand.motoko)),
     [],
   );
 

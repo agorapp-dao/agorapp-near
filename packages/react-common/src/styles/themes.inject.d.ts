@@ -20,5 +20,6 @@ declare module '@mui/material/styles' {
     dialogBg?: string;
     challengeColor?: string;
     courseColor?: string;
+    tutorialColor?: string;
   }
 }

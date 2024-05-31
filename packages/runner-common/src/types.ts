@@ -1,3 +1,4 @@
+// TODO: these types are duplicated in agorapp-frontend
 export type TTestRequest = {
   runner: string;
   image?: string;
@@ -24,3 +25,20 @@ export type TEditorFile = {
 };
 
 export type TEditorFileMap = { [path: string]: Omit<TEditorFile, 'path'> };
+
+export type TActionRequest<ARGS = unknown> = {
+  runner: string;
+  image?: string;
+  action: string;
+  courseSlug: string;
+  lessonSlug?: string;
+
+  files: TEditorFile[];
+
+  args?: ARGS;
+};
+
+export type TActionResponse<T = unknown> = {
+  body?: T;
+  error?: string;
+};

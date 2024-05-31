@@ -1,6 +1,6 @@
 {
   "name": "@agorapp-dao/editor-types-nearjs",
-  "version": "1.0.1",
+  "version": "1.0.5",
   "description": "",
   "files": [
     "dist"
@@ -14,9 +14,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-  },
   "devDependencies": {
-    "near-sdk-js": "^1.0.0"
+    "near-sdk-js": "github:agorapp-dao/near-sdk-js#v2",
+    "near-units": "^0.1.9",
+    "near-workspaces": "^3.5.0"
   }
 }

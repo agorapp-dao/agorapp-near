@@ -3,6 +3,7 @@ export enum ECourseLanguage {
   TYPESCRIPT = 'typescript',
   MOTOKO = 'motoko',
   FUNC = 'func',
+  RUST = 'rust',
 }
 
 export function parseCourseLanguage(str: string): ECourseLanguage {

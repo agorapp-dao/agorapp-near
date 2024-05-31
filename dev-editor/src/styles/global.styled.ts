@@ -4,7 +4,6 @@ import { alpha } from '@mui/system';
 export const GlobalStyle = createGlobalStyle`
   html, body {
     max-width: 100vw;
-    overflow: hidden;
     height: 100%;
     color: ${({ theme }) => theme.custom.textSecondary};
   }

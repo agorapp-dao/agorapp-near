@@ -5,3 +5,7 @@
 **/node_modules
 **/dist
 **/contracts/userland
+.git/
+.husky/
+.github/
+.idea/

@@ -1,9 +1,11 @@
 import { TEditorFileMap, TTestResponse } from '../types';
 import chai from 'chai';
+import chaiAsPromised from 'chai-as-promised';
 import { CourseMetadata } from './CourseMetadata';
 
 export { expect } from 'chai';
 
+chai.use(chaiAsPromised);
 chai.config.truncateThreshold = 0;
 
 export abstract class CourseBase<CTX = unknown, RES extends TTestResponse = TTestResponse> {
@@ -124,5 +126,14 @@ export function Fails(title: string, files: TEditorFileMap, match: string) {
 
     // Else, it's a method decorator
     CourseMetadata.addCheck(descriptor.value, { kind: 'fails', name: title, files, match });
+  };
+}
+
+export function Action(name: string) {
+  return function actionDecorator(target: any, methodName: string, descriptor: PropertyDescriptor) {
+    CourseMetadata.setActionMeta(descriptor.value, {
+      name,
+      fn: descriptor.value,
+    });
   };
 }

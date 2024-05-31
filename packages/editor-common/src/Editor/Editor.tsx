@@ -33,7 +33,6 @@ import { OverlayWithLessonHeader } from './OverlayWithLessonHeader/OverlayWithLe
 import AgDialogProvider from '@agorapp-dao/react-common/src/components/AgDialogProvider';
 import { Tree } from './Tree/Tree';
 import { EColorMode } from '@agorapp-dao/react-common/src/types/misc';
-import { ETopic } from '@agorapp-dao/content-common/src/types/ETopic';
 import { ECourseChain, ECourseLanguage } from '@agorapp-dao/content-common';
 
 type EditorProps = {
@@ -49,6 +48,9 @@ type EditorProps = {
 };
 
 const THEORY_DEFAULT_WIDTH = 600;
+const CODE_DEFAULT_HEIGHT = 400;
+const SIDE_PANEL_DEFAULT_WIDTH = 300;
+const BOTTOM_PANEL_DEFAULT_HEIGHT = 200;
 
 monacoDefineTheme(
   {
@@ -135,7 +137,15 @@ function EditorInner({ authenticated, colorMode, headerContent }: TEditorInner) 
   const actions = useEditorActions();
 
   const { mobile } = useMobile();
-  const [panelSizeHorizontal, setPanelSizeHorizontal] = useState([THEORY_DEFAULT_WIDTH, Infinity]);
+  const [panelSizeHorizontal, setPanelSizeHorizontal] = useState([
+    THEORY_DEFAULT_WIDTH,
+    Infinity,
+    SIDE_PANEL_DEFAULT_WIDTH,
+  ]);
+  const [panelSizeVertical, setPanelSizeVertical] = useState([
+    CODE_DEFAULT_HEIGHT,
+    BOTTOM_PANEL_DEFAULT_HEIGHT,
+  ]);
   const course = courseService.useCourse();
   const lessonSectionRef = useRef<HTMLDivElement>(null);
   const leftPanelElementRef = useRef<HTMLDivElement>(null);
@@ -166,13 +176,17 @@ function EditorInner({ authenticated, colorMode, headerContent }: TEditorInner) 
 
   useEffect(() => {
     if (mobile) {
-      setPanelSizeHorizontal([0, Infinity]);
+      setPanelSizeHorizontal([0, Infinity, 0]);
       actions.setCurrentSection(EEditorSectionType.LESSON);
     } else {
-      setPanelSizeHorizontal([THEORY_DEFAULT_WIDTH, Infinity]);
+      setPanelSizeHorizontal([
+        THEORY_DEFAULT_WIDTH,
+        Infinity,
+        store?.sidePanels?.length > 0 ? SIDE_PANEL_DEFAULT_WIDTH : 0,
+      ]);
       actions.setCurrentSection(EEditorSectionType.LESSON);
     }
-  }, [mobile, setPanelSizeHorizontal, actions]);
+  }, [mobile, setPanelSizeHorizontal, actions, store?.sidePanels]);
 
   const handleSelectLesson = (slug: string) => {
     setShowListOfContents(false);
@@ -272,6 +286,12 @@ function EditorInner({ authenticated, colorMode, headerContent }: TEditorInner) 
     </div>
   );
 
+  const activeSidePanel = store.sidePanels.length > 0 ? store.sidePanels[0] : null;
+
+  const sidePanel = activeSidePanel && (
+    <activeSidePanel.component {...(activeSidePanel.props as {})} />
+  );
+
   const theorySection = (
     <S.Section>
       {!mobile && lessonHeader}
@@ -322,6 +342,13 @@ function EditorInner({ authenticated, colorMode, headerContent }: TEditorInner) 
           offsetLeft={leftPanelElementRef.current?.offsetWidth}
         />
       )}
+      {store.currentSection === EEditorSectionType.LOG && (
+        <OverlayWithLessonHeader
+          lessonHeader={lessonHeader}
+          content={sidePanel}
+          offsetLeft={leftPanelElementRef.current?.offsetWidth}
+        />
+      )}
       <S.Wrapper style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         {mobile && lessonHeader}
         <SplitPane
@@ -349,17 +376,50 @@ function EditorInner({ authenticated, colorMode, headerContent }: TEditorInner) 
               )}
             </Box>
           </Pane>
-          <Pane>
-            <S.RightPane sx={{ pl: { sm: 0, md: 4 } }}>
-              <S.Code>
-                <SectionCode />
-              </S.Code>
-              <S.BottomPanel>
-                <ControlPanel handleResetCode={resetCode} />
-                <BottomPanel />
-              </S.BottomPanel>
-            </S.RightPane>
-          </Pane>
+          <SplitPane
+            sizes={panelSizeVertical}
+            onChange={setPanelSizeVertical}
+            split="horizontal"
+            sashRender={(_, active) => (
+              <SashContent
+                active={active}
+                type="vscode"
+                className={`sash-wrap-line ${active ? 'active' : 'inactive'}`}
+              >
+                <span className="line" />
+                <Box
+                  sx={{
+                    background: theme => theme.custom.splitPaneLine,
+                    width: '50px',
+                    height: '5px',
+                    borderRadius: '5px',
+                  }}
+                ></Box>
+                <span />
+              </SashContent>
+            )}
+          >
+            <Pane minSize={CODE_DEFAULT_HEIGHT} maxSize="80%">
+              <S.RightPane sx={{ pl: { sm: 0, md: 4 } }}>
+                <S.Code>
+                  <SectionCode />
+                </S.Code>
+                <S.BottomPanel>
+                  <ControlPanel handleResetCode={resetCode} />
+                </S.BottomPanel>
+              </S.RightPane>
+            </Pane>
+            <Pane>
+              <BottomPanel />
+            </Pane>
+          </SplitPane>
+          {!mobile && activeSidePanel ? (
+            <Pane minSize={SIDE_PANEL_DEFAULT_WIDTH} maxSize="50%">
+              {sidePanel}
+            </Pane>
+          ) : (
+            <></>
+          )}
         </SplitPane>
       </S.Wrapper>
     </>

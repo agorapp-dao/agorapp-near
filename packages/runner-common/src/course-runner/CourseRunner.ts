@@ -1,5 +1,12 @@
 import { CourseBase } from './course';
-import { TEditorFile, TEditorFileMap, TTest, TTestResponse } from '../types';
+import {
+  TActionRequest,
+  TActionResponse,
+  TEditorFile,
+  TEditorFileMap,
+  TTest,
+  TTestResponse,
+} from '../types';
 import { CourseMetadata, TCourseMeta, TTestMeta } from './CourseMetadata';
 
 /**
@@ -170,6 +177,7 @@ export class CourseRunner {
           throw err;
         }
         result.error = err.message;
+        result.passed = false;
       }
     };
 
@@ -210,6 +218,51 @@ export class CourseRunner {
     await afterAll();
 
     return result as RES;
+  }
+
+  async action<RES = unknown>(req: TActionRequest): Promise<TActionResponse<RES>> {
+    const courseMeta = this.courseMap.get(req.courseSlug);
+    if (!courseMeta) {
+      throw new Error(`Course ${req.courseSlug} not found`);
+    }
+
+    const lessons = CourseMetadata.getLessons(courseMeta);
+    const lessonMeta = lessons.find(lesson => lesson.slug === req.lessonSlug);
+
+    const filesMap = toFilesMap(req.files);
+
+    const context = {};
+    const course = new courseMeta.constructor();
+    course.files = filesMap;
+    course.context = context;
+    const courseActions = CourseMetadata.getActions(course);
+    const courseAction = courseActions.find(a => a.name === req.action);
+
+    let lesson, lessonAction;
+    if (lessonMeta) {
+      lesson = new lessonMeta.constructor();
+      lesson.files = filesMap;
+      lesson.context = context;
+      const lessonActions = CourseMetadata.getActions(lesson);
+      lessonAction = lessonActions.find(a => a.name === req.action);
+    }
+
+    const target = courseAction ? course : lesson;
+    const action = lessonAction || courseAction;
+
+    if (!action) {
+      throw new Error(
+        `Action ${req.action} for course ${req.courseSlug} and ${req.lessonSlug} not found`,
+      );
+    }
+
+    try {
+      const res = await action.fn.call(target, req);
+      return { body: res };
+    } catch (err) {
+      console.error(`Error while running action ${req.courseSlug}/${req.action}: ${err.stack}`);
+      return { error: err.message };
+    }
   }
 }
 

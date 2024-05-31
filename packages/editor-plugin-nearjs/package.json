@@ -15,10 +15,28 @@
   "dependencies": {
     "@agorapp-dao/content-common": "workspace:^",
     "@agorapp-dao/editor-common": "workspace:^",
-    "@agorapp-dao/editor-types-nearjs": "^1.0.1",
-    "@agorapp-dao/editor-types-node": "^1.0.1"
+    "@agorapp-dao/editor-types-nearjs": "^1.0.5",
+    "@agorapp-dao/editor-types-node": "^1.0.2",
+    "@agorapp-dao/react-common": "workspace:^",
+    "prop-types": "^15.8.1",
+    "react-avatar": "^5.0.3",
+    "react-beautiful-dnd": "^13.1.1",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/react-beautiful-dnd": "^13.1.8",
+    "@types/uuid": "^9.0.2"
   },
   "peerDependencies": {
-    "monaco-editor": "^0.34.0"
+    "@mui/icons-material": "^5.14.3",
+    "@mui/material": "^5.14.2",
+    "@mui/styled-engine-sc": "^5.12.0",
+    "@mui/system": "^5.14.0",
+    "@types/react": "^18.0.28",
+    "monaco-editor": "0.45.0",
+    "prettier": "^3.0.2",
+    "react": "^18.2.0",
+    "styled-components": "^6.0.7",
+    "swr": "^2.1.5"
   }
 }

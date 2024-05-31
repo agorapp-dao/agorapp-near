@@ -4,6 +4,7 @@ import { TEditorFileMap } from '../types';
 export const courseMetaKey = Symbol('courseMeta');
 export const lessonMetaKey = Symbol('lessonMeta');
 export const testMetaKey = Symbol('testMeta');
+export const actionMetaKey = Symbol('testMeta');
 
 export const checkMetaKey = Symbol('checkMeta');
 
@@ -30,6 +31,11 @@ export type TTestMeta = {
   timeout?: number;
   only?: boolean;
   skip?: boolean;
+};
+
+export type TActionMeta = {
+  name: string;
+  fn: () => void;
 };
 
 export type TCheckMeta = {
@@ -77,6 +83,20 @@ export class CourseMetadata {
     return members
       .map(member => (lesson as any)[member] && (lesson as any)[member][testMetaKey])
       .filter((test: TTestMeta) => !!test);
+  }
+
+  static setActionMeta(method: any, meta: TActionMeta) {
+    method[actionMetaKey] = meta;
+  }
+
+  static getActions(lessonOrCourse: LessonBase | CourseBase): TActionMeta[] {
+    if (!lessonOrCourse) return [];
+    const members = Object.getOwnPropertyNames(Object.getPrototypeOf(lessonOrCourse));
+    return members
+      .map(
+        member => (lessonOrCourse as any)[member] && (lessonOrCourse as any)[member][actionMetaKey],
+      )
+      .filter((action: TActionMeta) => !!action);
   }
 
   static addCheck(target: any, check: TCheck) {

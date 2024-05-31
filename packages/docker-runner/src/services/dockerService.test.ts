@@ -10,6 +10,7 @@ describe('dockerService', () => {
     it('passes result as JSON on a single line', async () => {
       const { result, error } = await dockerService.runUnrestricted(
         'test-docker-runner',
+        'test',
         {
           action: 'testResult',
         },
@@ -21,13 +22,17 @@ describe('dockerService', () => {
     });
 
     it('returns stderr from the container', async () => {
-      const { output, error } = await dockerService.runUnrestricted('test-docker-runner', {});
+      const { output, error } = await dockerService.runUnrestricted(
+        'test-docker-runner',
+        'test',
+        {},
+      );
       expect(error).to.equal('Container exited with a status code 1.');
       expect(output).to.include('DOCKER_RUNNER_ARGS must contain an action property');
     });
 
     it('returns stdout from the container', async () => {
-      const { output } = await dockerService.runUnrestricted('test-docker-runner', {
+      const { output } = await dockerService.runUnrestricted('test-docker-runner', 'test', {
         action: 'testStdOut',
       });
       expect(output.trim()).to.equal('stdout: hello');
@@ -36,19 +41,26 @@ describe('dockerService', () => {
     it('cannot access network', async () => {
       let res = await dockerService.runUnrestricted(
         'test-docker-runner',
+        'test',
         { action: 'testNetwork' },
         { timeout: 10_000 },
       );
       expect(res.output).to.include('getaddrinfo EAI_AGAIN'); // dns timeout
 
-      res = await dockerService.runUnrestricted('test-docker-runner', { action: 'testPing' });
+      res = await dockerService.runUnrestricted('test-docker-runner', 'test', {
+        action: 'testPing',
+      });
       expect(res.output).to.include('Network unreachable');
     }).timeout(10_000);
 
     it('does not keep container after run', async () => {
-      const { output, containerId } = await dockerService.runUnrestricted('test-docker-runner', {
-        action: 'testStdOut',
-      });
+      const { output, containerId } = await dockerService.runUnrestricted(
+        'test-docker-runner',
+        'test',
+        {
+          action: 'testStdOut',
+        },
+      );
 
       // wait for the container to be removed
       await sleep(500);
@@ -62,6 +74,7 @@ describe('dockerService', () => {
     it('timeouts', async () => {
       const { error, containerId } = await dockerService.runUnrestricted(
         'test-docker-runner',
+        'test',
         { action: 'testTimeout' },
         { timeout: 500 },
       );
@@ -81,6 +94,7 @@ describe('dockerService', () => {
     it('limits the memory', async () => {
       const res = await dockerService.runUnrestricted(
         'test-docker-runner',
+        'test',
         { action: 'testMemoryLimit' },
         { memory: 24 * Math.pow(1024, 2) },
       );

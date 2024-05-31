@@ -32,6 +32,10 @@ export const ContentItem: React.FC<TProps> = ({
   const store = useEditorStore();
   const { progress } = courseService.useCourseProgress();
 
+  // TODO: hotfix
+  if (course.data?.slug == 'motoko-tutorial') {
+    enableLessonsWithProgress = false;
+  }
   const status = progress[item.slug!]?.status;
   const linkEnabled =
     !enableLessonsWithProgress ||

@@ -3,9 +3,12 @@ export type TEditorConfig = {
   enableLessonsWithProgress?: boolean;
   authenticated?: boolean;
   hideAuthor?: boolean;
-  onLessonComplete?: (
-    lessonNumber: string | undefined,
-    isPrevLesson: boolean,
-    isNextLesson: boolean,
-  ) => Promise<void>;
+  onLessonComplete?: (data: TEditorConfigOnLessonCompleteProps) => Promise<void>;
+};
+
+export type TEditorConfigOnLessonCompleteProps = {
+  lessonNumber: string | undefined;
+  isPrevLesson: boolean;
+  isNextLesson: boolean;
+  gas?: number;
 };

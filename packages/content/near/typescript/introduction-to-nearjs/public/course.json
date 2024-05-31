@@ -37,6 +37,188 @@
       "content": "04-environment/lesson.md",
       "files": ["04-environment/contract.ts"],
       "solution": "04-environment/solution.md"
+    },
+    {
+      "name": "Payable methods",
+      "slug": "05-payable-methods",
+      "content": "05-payable-methods/lesson.md",
+      "files": ["05-payable-methods/game.ts"],
+      "solution": "05-payable-methods/solution.md",
+      "pluginConfig": {
+        "initialBalances": [
+          { "accountId": "game.near", "balance": "0" },
+          { "accountId": "alice.near", "balance": "5000000" },
+          { "accountId": "bob.near", "balance": "4000000" },
+          { "accountId": "tom.near", "balance": "1000000" }
+        ],
+        "availableTransactions": [
+          {
+            "contract": "game.near",
+            "method": "join",
+            "signer": "",
+            "args": [],
+            "payable": true,
+            "amount": "1000000"
+          }
+        ],
+        "defaultTransactions": [
+          {
+            "contract": "game.near",
+            "method": "join",
+            "signer": "alice.near",
+            "args": [],
+            "payable": true,
+            "amount": "1000000"
+          }
+        ],
+        "signers": ["alice.near", "bob.near", "tom.near"]
+      }
+    },
+    {
+      "name": "Sending native tokens",
+      "slug": "06-sending-native-tokens",
+      "content": "06-sending-native-tokens/lesson.md",
+      "files": ["06-sending-native-tokens/game.ts"],
+      "solution": "06-sending-native-tokens/solution.md",
+      "pluginConfig": {
+        "initialBalances": [
+          { "accountId": "game.near", "balance": "0" },
+          { "accountId": "alice.near", "balance": "5000000" },
+          { "accountId": "bob.near", "balance": "4000000" }
+        ],
+        "availableTransactions": [
+          {
+            "contract": "game.near",
+            "method": "join",
+            "signer": "",
+            "args": [],
+            "payable": true,
+            "amount": "1000000"
+          },
+          {
+            "contract": "game.near",
+            "method": "play",
+            "signer": "",
+            "args": []
+          }
+        ],
+        "defaultTransactions": [
+          {
+            "contract": "game.near",
+            "method": "join",
+            "signer": "alice.near",
+            "args": [],
+            "payable": true,
+            "amount": "1000000"
+          },
+          {
+            "contract": "game.near",
+            "method": "join",
+            "signer": "bob.near",
+            "args": [],
+            "payable": true,
+            "amount": "1000000"
+          },
+          {
+            "contract": "game.near",
+            "method": "play",
+            "signer": "game.near",
+            "args": []
+          }
+        ],
+        "signers": ["alice.near", "bob.near", "tom.near", "game.near"]
+      }
+    },
+    {
+      "name": "Promises",
+      "slug": "07-promises",
+      "content": "07-promises/lesson.md",
+      "files": ["07-promises/game.ts"],
+      "solution": "07-promises/solution.md",
+      "pluginConfig": {
+        "initialBalances": [
+          { "accountId": "game.near", "balance": "0" },
+          { "accountId": "alice.near", "balance": "1000000" },
+          { "accountId": "bob.near", "balance": "1000000" },
+          { "accountId": "carol.near", "balance": "1000000" }
+        ],
+        "availableTransactions": [
+          {
+            "contract": "game.near",
+            "method": "join",
+            "signer": "",
+            "args": [],
+            "payable": true,
+            "amount": "1000000"
+          },
+          {
+            "contract": "game.near",
+            "method": "abort",
+            "signer": "",
+            "args": []
+          }
+        ],
+        "defaultTransactions": [
+          {
+            "contract": "game.near",
+            "method": "join",
+            "signer": "alice.near",
+            "args": [],
+            "payable": true,
+            "amount": "1000000"
+          },
+          {
+            "contract": "game.near",
+            "method": "join",
+            "signer": "bob.near",
+            "args": [],
+            "payable": true,
+            "amount": "1000000"
+          },
+          {
+            "contract": "game.near",
+            "method": "join",
+            "signer": "carol.near",
+            "args": [],
+            "payable": true,
+            "amount": "1000000"
+          },
+          {
+            "contract": "game.near",
+            "method": "abort",
+            "signer": "game.near",
+            "args": []
+          }
+        ],
+        "signers": ["alice.near", "bob.near", "carol.near", "game.near"]
+      }
+    },
+    {
+      "name": "Cross-contract calls",
+      "slug": "08-cross-contract-calls",
+      "content": "08-cross-contract-calls/lesson.md",
+      "files": ["08-cross-contract-calls/game-manager.ts", "08-cross-contract-calls/game.ts"],
+      "solution": "08-cross-contract-calls/solution.md"
+    },
+    {
+      "name": "Callbacks",
+      "slug": "09-callbacks",
+      "content": "09-callbacks/lesson.md",
+      "files": ["09-callbacks/game-manager.ts", "09-callbacks/game.ts"],
+      "solution": "09-callbacks/solution.md"
+    },
+    {
+      "name": "Deploying contracts",
+      "slug": "10-create-deploy",
+      "content": "10-create-deploy/lesson.md",
+      "files": ["10-create-deploy/game-manager.ts", "10-create-deploy/game.ts"],
+      "solution": "10-create-deploy/solution.md"
+    },
+    {
+      "name": "Testnet",
+      "slug": "11-testnet",
+      "content": "11-testnet/lesson.md",
+      "files": ["11-testnet/secret.ts"]
     }
   ]
 }

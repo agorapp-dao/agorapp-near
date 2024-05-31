@@ -8,11 +8,11 @@ export const allowedImages: { [image: string]: TAllowedImage } = {
     memory: 250 * Math.pow(1024, 2),
     timeout: 10_000,
   },
-  'rbiosas/swarm-docker-runner': {
+  'rbiosas/swarm-docker-image': {
     memory: 100 * Math.pow(1024, 2),
     timeout: 5_000,
   },
-  'rbiosas/nearjs-docker-runner': {
+  'rbiosas/nearjs-docker-image': {
     memory: 250 * Math.pow(1024, 2),
     timeout: 10_000,
   },

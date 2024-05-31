@@ -14,6 +14,7 @@ import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import { courseService } from '../../services/courseService';
 import { useAuthorDialog } from '../../hooks/dialog/useAuthorDialog';
+import AdbIcon from '@mui/icons-material/Adb';
 
 interface StyledTabProps {
   icon?: string | React.ReactElement;
@@ -91,6 +92,7 @@ export const SectionTabs = () => {
               <AntTab icon={<FolderOpenIcon />} value={EEditorSectionType.TREE} />
             )}
             {mobile && <AntTab icon={<CodeIcon />} value={EEditorSectionType.CODE} />}
+            {mobile && <AntTab icon={<AdbIcon />} value={EEditorSectionType.LOG} />}
           </Tabs>
         </Box>
       </S.Tabs>

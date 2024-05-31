@@ -14,7 +14,10 @@
   },
   "dependencies": {
     "@agorapp-dao/content-common": "workspace:^",
+    "@agorapp-dao/content-near-typescript-async-programming": "workspace:^",
     "@agorapp-dao/content-near-typescript-introduction-to-nearjs": "workspace:^",
+    "@agorapp-dao/content-near-typescript-near-trade-heist": "workspace:^",
+    "@agorapp-dao/content-near-typescript-steal-the-tips": "workspace:^",
     "@agorapp-dao/editor-common": "workspace:^",
     "@agorapp-dao/editor-plugin-nearjs": "workspace:^",
     "@agorapp-dao/react-common": "workspace:^",

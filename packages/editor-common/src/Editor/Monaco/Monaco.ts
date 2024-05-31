@@ -7,8 +7,7 @@ let monaco: Promise<Monaco>;
 
 export async function getMonaco() {
   if (!monaco) {
-    loader.config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.34.0/min/vs' } });
-    // loader.config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.41.0/min/vs' } });
+    loader.config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs' } });
     monaco = loader.init();
   }
 
