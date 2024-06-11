@@ -10,7 +10,7 @@
   "dependencies": {
     "@agorapp-dao/runner-common": "workspace:*",
     "lodash": "^4.17.21",
-    "near-sdk-js": "github:agorapp-dao/near-sdk-js#v2",
+    "near-sdk-js": "github:agorapp-dao/near-sdk-js#v3",
     "near-workspaces": "^3.5.0"
   },
   "devDependencies": {

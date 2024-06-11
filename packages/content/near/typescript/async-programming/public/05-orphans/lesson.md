@@ -13,7 +13,19 @@ withdraw({ amount }: { amount: string }) {
 }
 ```
 
-Note that the behavior of the NEAR JavaScript SDK differs here from that of the Rust SDK. In the Rust SDK, orphaned promises are executed, which is useful if you want to execute some side effects that are independent of the method result. There is a [bug in JavaScript SDK](https://github.com/near/near-sdk-js/issues/387) open for this.
+Sometimes it is useful to execute a promise without waiting for its result. In this case, you can use the `build` method on the promise:
+
+```typescript
+@call({})
+withdraw({ amount }: { amount: string }) {
+  NearPromise.new('agr-token.test.near').functionCall(
+    'ft_transfer',
+    JSON.stringify({ receiver_id: near.predecessorAccountId(), amount }),
+    DEPOSIT,
+    GAS,
+  ).build();
+}
+```
 
 ## Exercise
 

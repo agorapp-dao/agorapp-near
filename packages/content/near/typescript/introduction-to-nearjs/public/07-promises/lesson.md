@@ -69,7 +69,15 @@ We will talk about callbacks in more detail in later lessons.
 
 ### Orphaned promises
 
-If a promise is not returned from a method, it is referred to as "orphaned." Orphaned promises are executed, but their results are ignored. If the promise fails, your method will not be affected and succeed.
+If a promise is not returned from a method, it is referred to as "orphaned." **Orphaned promises are not executed**.
+
+```typescript
+@call({ })
+near_withdraw() {
+  // promise will not be executed
+  NearPromise.new('alice.near').transfer(1_000_000n);
+}
+```
 
 Apart from forgetting to return a promise, there is another case where you can create an orphaned promise inadvertently:
 
@@ -96,7 +104,14 @@ near_withdraw() {
 }
 ```
 
-Please note that currently there is a [bug in JavaScript SDK](https://github.com/near/near-sdk-js/issues/387). Orphaned promises are not executed at all.
+Sometimes you may want to execute the promise but don't wait for its result. In this case, you can use the `build` method:
+
+```typescript
+@call({ })
+near_withdraw() {
+  NearPromise.new('alice.near').transfer(1_000_000n).build();
+}
+```
 
 ## Exercise
 

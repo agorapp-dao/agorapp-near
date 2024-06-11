@@ -2,6 +2,11 @@
 
 This is a monorepo containing packages that add support for Near Blockchain to [agorapp.dev](https://agorapp.dev/)
 
+## Prerequsities
+
+Node.js v18
+pnpm v8
+
 ## Quick Start
 
 ```bash

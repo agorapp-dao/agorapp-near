@@ -15,7 +15,7 @@
   "dependencies": {
     "@agorapp-dao/content-common": "workspace:^",
     "@agorapp-dao/editor-common": "workspace:^",
-    "@agorapp-dao/editor-types-nearjs": "^1.0.5",
+    "@agorapp-dao/editor-types-nearjs": "^1.0.6",
     "@agorapp-dao/editor-types-node": "^1.0.2",
     "@agorapp-dao/react-common": "workspace:^",
     "prop-types": "^15.8.1",

@@ -801,5 +801,77 @@ describe('NearSdkMock', () => {
         expect(res).to.equal('error-ignored');
       });
     });
+
+    describe('Orphaned promises and promise.build()', () => {
+      let nearMock: NearSdkMock;
+
+      const otherContract = `
+        import { call, view, near, NearBindgen, NearPromise } from 'near-sdk-js';
+        
+        @NearBindgen({})
+        class OtherContract {
+          count = 0;
+        
+          @call({  })
+          inc() {
+            this.count++;
+          }
+        }
+      `;
+
+      beforeEach(async () => {
+        nearMock = new NearSdkMock();
+        await nearMock.deploy('other.test.near', otherContract);
+      });
+
+      it.only('orphaned promise is not executed', async () => {
+        const main = `
+          import { call, near, NearBindgen, NearPromise } from 'near-sdk-js';
+          
+          const GAS = 10_000_000_000_000n;
+          
+          @NearBindgen({})
+          class MainContract {
+            @call({})
+            run() {
+              NearPromise.new('other.test.near')
+                .functionCall('inc', '', 0n, GAS);
+            }
+          }
+        `;
+
+        await nearMock.deploy('main.test.near', main);
+
+        await nearMock.call('main.test.near', 'main.test.near', 'run');
+
+        const otherContract = nearMock.getContract('other.test.near').instance;
+        expect(otherContract.count).to.equal(0);
+      });
+
+      it.only('promise.build() plans the promise for execution without waiting for result', async () => {
+        const main = `
+          import { call, near, NearBindgen, NearPromise } from 'near-sdk-js';
+          
+          const GAS = 10_000_000_000_000n;
+          
+          @NearBindgen({})
+          class MainContract {
+            @call({})
+            run() {
+              NearPromise.new('other.test.near')
+                .functionCall('inc', '', 0n, GAS)
+                .build();
+            }
+          }
+        `;
+
+        await nearMock.deploy('main.test.near', main);
+
+        await nearMock.call('main.test.near', 'main.test.near', 'run');
+
+        const otherContract = nearMock.getContract('other.test.near').instance;
+        expect(otherContract.count).to.equal(1);
+      });
+    });
   });
 });

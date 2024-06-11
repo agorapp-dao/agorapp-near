@@ -13,9 +13,7 @@ near_withdraw() {
 
 We start by creating a promise with `NearPromise.new()` and specifying the target account for the operation. We then use the `transfer()` method to specify that we want to transfer `1,000,000` yoctoNEAR to this account.
 
-Usually it is important to return the promise from the method. If you don't return it, the promise will execute, but its result will be ignored. Furthermore, if the promise fails, the caller of your method will not be notified.
-
-Please note that currently there is a [bug in JavaScript SDK](https://github.com/near/near-sdk-js/issues/387). Orphaned promises are not executed at all.
+Note that it is important to return the promise from the method. If you don't return it, the promise will not be executed.
 
 ## Exercise
 
